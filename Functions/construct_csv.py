@@ -91,7 +91,7 @@ def create_csv(filename: str, data: list):
             datatype = dic.get(DIC[1])
             for text in dic.get(DIC[2]):
                 if text.startswith(TOPIC_HEADER):
-                    topic = text[len(TOPIC_HEADER):].lstrip()
+                    topic = text[len(TOPIC_HEADER):].strip()
                     continue
                 args = ''
                 if text.startswith('[') and ']' in text:
