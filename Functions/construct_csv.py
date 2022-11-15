@@ -8,7 +8,7 @@ import inquirer
 
 try:
     from Functions.library import Formats
-except:
+except ImportError:
     from library import Formats
 
 
@@ -23,11 +23,7 @@ CSV_HEADER = f'{",".join(itertools.chain(DIC[:-1], ["topic"], LINE_HEADER, [DIC[
 
 def find_files(location: str, extension: str):
     ''' Returns: List of file names at location with extension. '''
-    files = []
-    for file in os.listdir(location):
-        if file.endswith(extension) or extension == '*':
-            files.append(file)
-    return files
+    return [file for file in os.listdir(location) if file.endswith(extension) or extension == '*']
 
 
 def load_textfile(filename: str):
@@ -35,8 +31,7 @@ def load_textfile(filename: str):
     data = []
     with open(f'{DATAFOLDER}{filename}') as file:
         for line in file: # Remove whitespace and quotation marks
-            clean_line = re.sub(r'"', '', line).strip()
-            if clean_line:
+            if clean_line := re.sub(r'"', '', line).strip():
                 data.append(clean_line)
     return data
 
