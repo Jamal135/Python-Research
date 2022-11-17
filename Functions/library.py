@@ -1,11 +1,12 @@
 ''' Creation Date: 09/11/2022 '''
 
 
+import pandas
+
 from colorama import Fore, Style
 
 
 # Stores general classes and functions used across project
-
 class Formats:
     ''' Purpose: Correctly format print messages given purpose. '''
     def status(message: str):
@@ -24,3 +25,10 @@ class Formats:
         ''' Formats: [i] message'''
         indicator = '\n[' + Fore.BLUE + 'i' + Style.RESET_ALL + ']'
         return f'{indicator} {message}'
+
+
+def extract_columns(filename: str):
+    ''' Returns: List of all CSV file header names. '''
+    return pandas.read_csv(filename, sep=',').column_name
+
+print(extract_columns('Results/text.csv'))
