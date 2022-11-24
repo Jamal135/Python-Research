@@ -4,11 +4,13 @@
 import inquirer
 
 
+# from Functions.keywords import
+from Functions.quant_analysis import quant_analysis
 from Functions.construct_csv import construct_csv
 from Functions.library import Formats
 
 
-OPTIONS = {'Build CSV': construct_csv, 'Create Keywords': quit, 'Exit': quit}
+OPTIONS = {'Build CSV': construct_csv, 'Create Keywords': quit, 'Quantitative Analysis': quant_analysis, 'Exit': quit}
 
 
 def select_option():
