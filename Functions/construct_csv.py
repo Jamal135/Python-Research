@@ -7,29 +7,22 @@ import re
 import inquirer
 
 try:
-    from Functions.library import Formats
+    import Functions.library as lib
 except ImportError:
-    from library import Formats
+    import library as lib
 
 
-DATAFOLDER = 'Raw_Data/'
-OUTPUTFOLDER = 'Results/'
 TOPIC_HEADER = 'TOPIC:'
-DATATYPE_CHOICES = ['audio', 'chat']
+DATATYPE_CHOICES = {'Audio':'audio', 'Chat':'chat'}
 DIC = ['group', 'datatype', 'text']
 LINE_HEADER = ['name','timestamp']
 CSV_HEADER = f'{",".join(itertools.chain(DIC[:-1], ["topic"], LINE_HEADER, [DIC[-1]]))}\n'
 
 
-def find_files(location: str, extension: str):
-    ''' Returns: List of file names at location with extension. '''
-    return [file for file in os.listdir(location) if file.endswith(extension) or extension == '*']
-
-
 def load_textfile(filename: str):
     ''' Returns: List of text lines from textfile. '''
     data = []
-    with open(f'{DATAFOLDER}{filename}') as file:
+    with open(f'{lib.DATAFOLDER}{filename}') as file:
         for line in file: # Remove whitespace and quotation marks
             if clean_line := re.sub(r'"', '', line).strip():
                 data.append(clean_line)
@@ -50,19 +43,12 @@ def get_group(textfile: str):
         validate = check_group
     )
 
-def get_datatype(textfile: str):
-    ''' Returns: User selected datatype choice. '''
-    return inquirer.list_input(
-        message = f'Please select datatype for {textfile}',
-        choices = DATATYPE_CHOICES
-    )
-
 
 def check_filename(_, text: str):
     ''' Purpose: Validates filename has acceptable characters and does not exist. '''
     if not re.match(r'^[A-Za-z0-9_-]*$', text):
         raise inquirer.errors.ValidationError('', reason = f'{text} contains invalid characters...')
-    existing = find_files(OUTPUTFOLDER, '.csv')
+    existing = lib.get_files(lib.DATAFOLDER, '.csv')
     if f'{text}.csv' in existing:
         raise inquirer.errors.ValidationError('', reason = f'{text} is an existing filename...')
     return True
@@ -79,7 +65,7 @@ def get_filename():
 def create_csv(filename: str, data: list):
     ''' Purpose: Creates new CSV file from compiled data. '''
     topic = ''
-    with open(f'{OUTPUTFOLDER}{filename}.csv', 'a') as output:
+    with open(f'{lib.DATAFOLDER}{filename}.csv', 'a') as output:
         output.write(CSV_HEADER)
         for dic in data:
             group = dic.get(DIC[0])
@@ -93,27 +79,27 @@ def create_csv(filename: str, data: list):
                     args = text.split('[', 1)[1].split(']')[0]
                     text = text[len(args) + 2:].lstrip()
                 fields = args + ',' * (len(LINE_HEADER) - 1 - args.count(','))
-                line = ','.join([group, datatype, topic, fields, f'"{text}"'])
+                line = ','.join([f'"{group}"', f'"{datatype}"', f'"{topic}"', f'"{fields}"', f'"{text}"'])
                 output.write(f'{line}\n')
 
 
 def construct_csv():
     try:
-        textfiles = find_files(DATAFOLDER, '.txt')
-        print(Formats.status(f'Found {len(textfiles)} textfiles'))
+        textfiles = lib.get_files(lib.DATAFOLDER, '.txt')
+        print(lib.Formats.status(f'Found {len(textfiles)} textfiles'))
         data = [] # List of Dictionaries
         for textfile in textfiles:
-            print(Formats.status(f'Processing {textfile}'))
+            print(lib.Formats.status(f'Processing {textfile}'))
             group = get_group(textfile)
-            datatype = get_datatype(textfile)
+            datatype = lib.get_choice(DATATYPE_CHOICES, f'Please select datatype for {textfile}')
             contents = load_textfile(textfile)
             dictionary = dict(zip(DIC, [group, datatype, contents]))
             data.append(dictionary)
         filename = get_filename()
-        print(Formats.status('Creating CSV output'))
+        print(lib.Formats.status('Creating CSV output'))
         create_csv(filename, data)
     except Exception as error:
-        Formats.alert(f'CSV construction failed:\n{error}')
+        print(lib.Formats.alert(f'CSV construction failed:\n{error}'))
         quit()
 
 

@@ -2,9 +2,13 @@
 
 
 import pandas
-
+import os
+import inquirer
 from colorama import Fore, Style
 
+
+DATAFOLDER = 'Raw_Data/'
+RESULTFOLDER = 'Results/'
 
 # Stores general classes and functions used across project
 class Formats:
@@ -23,7 +27,7 @@ class Formats:
         return f'{indicator} {self}...'
     def info(self):
         ''' Formats: [i] message'''
-        indicator = '\n[' + Fore.BLUE + 'i' + Style.RESET_ALL + ']'
+        indicator = '[' + Fore.BLUE + 'i' + Style.RESET_ALL + ']'
         return f'{indicator} {self}'
 
 
@@ -41,3 +45,28 @@ class Dataframe:
     def get_length(self):
         ''' Returns: Number of rows in given CSV data. '''
         return len(self.dataframe.index)
+
+
+def get_choice(choices, message: str):
+    ''' Returns: Get user choice from list or dict key options. '''
+    dictionary = True if type(choices) is dict else False
+    options = list(choices.keys()) if dictionary else choices
+    choice = inquirer.list_input(
+        message = message,
+        choices = options)
+    return choices[choice] if dictionary else choice 
+
+
+def get_files(location: str, extension: str):
+    ''' Returns: List of file names at location with extension. '''
+    return [file for file in os.listdir(location) if file.endswith(extension) or extension == '*']
+
+
+def get_CSV(filename: str):
+    ''' Returns: CSV loaded to dataframe with select columns dropped. '''
+    return pandas.read_csv(os.path.join(os.path.dirname(__file__), f'../{DATAFOLDER}{filename}'), encoding='ISO-8859-1')
+
+
+def nice_print(self):
+    ''' Returns: Nicely formatted string representation of class contents. '''
+    return '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
