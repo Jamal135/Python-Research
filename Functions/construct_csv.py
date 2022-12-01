@@ -79,7 +79,7 @@ def create_csv(filename: str, data: list):
                     args = text.split('[', 1)[1].split(']')[0]
                     text = text[len(args) + 2:].lstrip()
                 fields = args + ',' * (len(LINE_HEADER) - 1 - args.count(','))
-                line = ','.join([f'"{group}"', f'"{datatype}"', f'"{topic}"', f'"{fields}"', f'"{text}"'])
+                line = ','.join([group, datatype,topic, fields, f'"{text}"'])
                 output.write(f'{line}\n')
 
 
