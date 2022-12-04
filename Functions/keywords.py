@@ -5,7 +5,7 @@ from keybert import KeyBERT
 
 MODEL = KeyBERT(model = 'all-mpnet-base-v2')
 
-
+# TODO: Hook keywords in, add user specified arguments.
 def get_keywords(text: str):
     ''' Returns: List of keywords for given string. '''
     keywords = MODEL.extract_keywords(

@@ -12,10 +12,11 @@ except ImportError:
     import library as lib
 
 
+# TODO: Make below generic arguments to provided bu users.
 TOPIC_HEADER = 'TOPIC:'
 DATATYPE_CHOICES = {'Audio':'audio', 'Chat':'chat'}
 DIC = ['group', 'datatype', 'text']
-LINE_HEADER = ['name','timestamp','mcjeffr']
+LINE_HEADER = ['name','timestamp']
 CSV_HEADER = f'{",".join(itertools.chain(DIC[:-1], ["topic"], LINE_HEADER, [DIC[-1]]))}\n'
 
 
