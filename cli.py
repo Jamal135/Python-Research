@@ -26,9 +26,9 @@ if __name__ == '__main__':
         choice = select_option()
         if choice == 'Exit':
             quit()
-        print(Formats.status(f'{choice} selected'))
+        Formats.status(f'{choice} selected')
         try:
             OPTIONS[choice]()
             print('\n')
         except KeyboardInterrupt:
-            print(Formats.alert(f'Aborting {choice}'))
+            Formats.alert(f'Aborting {choice}')

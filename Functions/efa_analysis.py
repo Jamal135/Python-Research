@@ -266,21 +266,21 @@ def save_results(name: str, settings: EFA_Settings, factorability: EFA_Factorabi
 def efa_analysis():
     try:
         efa_settings = EFA_Settings()
-        print(lib.Formats.status(f'Calculating data factorability'))
+        lib.Formats.status('Calculating data factorability')
         efa_factorability = EFA_Factorability(efa_settings)
-        print(lib.Formats.status(f'Performing eigenvalue analysis'))
+        lib.Formats.status('Performing eigenvalue analysis')
         efa_eigens = EFA_Eigen(efa_settings)
-        print(lib.Formats.info(f'Suggested topics: {efa_eigens.suggested}'))
-        print(lib.Formats.status(f'Performing horn parallel analysis'))
+        lib.Formats.info(f'Suggested topics: {efa_eigens.suggested}')
+        lib.Formats.status('Performing horn parallel analysis')
         efa_horn = EFA_Horn(efa_settings)
-        print(lib.Formats.info(f'Suggested topics: {efa_horn.suggested}'))
+        lib.Formats.info(f'Suggested topics: {efa_horn.suggested}')
         number_topics = get_topics()
-        print(lib.Formats.status(f'Performing the defined EFA'))
+        lib.Formats.status('Performing the defined EFA')
         efa_results = EFA(efa_settings, number_topics)
         name = get_name()
         save_results(name, efa_settings, efa_factorability, efa_eigens, efa_horn, efa_results)
     except Exception as error:
-       print(lib.Formats.alert(f'EFA analysis failed:\n{error}'))
+       lib.Formats.alert(f'EFA analysis failed:\n{error}')
        quit()
 
 

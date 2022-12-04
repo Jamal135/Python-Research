@@ -15,7 +15,7 @@ except ImportError:
 TOPIC_HEADER = 'TOPIC:'
 DATATYPE_CHOICES = {'Audio':'audio', 'Chat':'chat'}
 DIC = ['group', 'datatype', 'text']
-LINE_HEADER = ['name','timestamp']
+LINE_HEADER = ['name','timestamp','mcjeffr']
 CSV_HEADER = f'{",".join(itertools.chain(DIC[:-1], ["topic"], LINE_HEADER, [DIC[-1]]))}\n'
 
 
@@ -86,20 +86,20 @@ def create_csv(filename: str, data: list):
 def construct_csv():
     try:
         textfiles = lib.get_files(lib.DATAFOLDER, '.txt')
-        print(lib.Formats.status(f'Found {len(textfiles)} textfiles'))
+        lib.Formats.status(f'Found {len(textfiles)} textfiles')
         data = [] # List of Dictionaries
         for textfile in textfiles:
-            print(lib.Formats.status(f'Processing {textfile}'))
+            lib.Formats.status(f'Processing {textfile}')
             group = get_group(textfile)
             datatype = lib.get_choice(DATATYPE_CHOICES, f'Please select datatype for {textfile}')
             contents = load_textfile(textfile)
             dictionary = dict(zip(DIC, [group, datatype, contents]))
             data.append(dictionary)
         filename = get_filename()
-        print(lib.Formats.status('Creating CSV output'))
+        lib.Formats.status('Creating CSV output')
         create_csv(filename, data)
     except Exception as error:
-        print(lib.Formats.alert(f'CSV construction failed:\n{error}'))
+        lib.Formats.alert(f'CSV construction failed:\n{error}')
         quit()
 
 

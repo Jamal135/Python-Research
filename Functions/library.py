@@ -10,28 +10,27 @@ from colorama import Fore, Style
 DATAFOLDER = 'Raw_Data/'
 RESULTFOLDER = 'Results/'
 
-# Stores general classes and functions used across project
+
 class Formats:
-    ''' Purpose: Correctly format print messages given purpose. '''
+    ''' Purpose: Correctly print messages given purpose. '''
     def status(self):
-        ''' Format: [-] message...'''
+        ''' [-] message...'''
         indicator = '\n[' + Fore.GREEN + '-' + Style.RESET_ALL + ']'
-        return f'{indicator} {self}...'
+        print(f'{indicator} {self}...')
     def question(self):
-        ''' Format: [?] message: '''
+        ''' [?] message: '''
         indicator = '\n[' + Fore.YELLOW + '?' + Style.RESET_ALL + ']'
-        return f'{indicator} {self}: '
+        print(f'{indicator} {self}: ')
     def alert(self):
-        ''' Format: [!] message...'''
+        ''' [!] message...'''
         indicator = '\n[' + Fore.RED + '!' + Style.RESET_ALL + ']'
-        return f'{indicator} {self}...'
+        print(f'{indicator} {self}...')
     def info(self):
-        ''' Formats: [i] message'''
+        ''' [i] message'''
         indicator = '[' + Fore.BLUE + 'i' + Style.RESET_ALL + ']'
-        return f'{indicator} {self}'
+        print(f'{indicator} {self}')
 
 
-# Stores general functionality around working with CSV type data
 class Dataframe:
     ''' Purpose: Loads CSV file to dataframe for processing. '''
     def __init__(self, filename: str):
@@ -49,7 +48,7 @@ class Dataframe:
 
 def get_choice(choices, message: str):
     ''' Returns: Get user choice from list or dict key options. '''
-    dictionary = True if type(choices) is dict else False
+    dictionary = type(choices) is dict
     options = list(choices.keys()) if dictionary else choices
     choice = inquirer.list_input(
         message = message,
@@ -69,4 +68,4 @@ def get_CSV(filename: str):
 
 def nice_print(self):
     ''' Returns: Nicely formatted string representation of class contents. '''
-    return '\n'.join(('{} = {}'.format(item, self.__dict__[item]) for item in self.__dict__))
+    return '\n'.join(f'{item} = {self.__dict__[item]}' for item in self.__dict__)
